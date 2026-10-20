@@ -1,0 +1,25 @@
+services:
+  freight-os:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: maven-freight-command-center
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount database to persist changes made by autonomous dispatch agents
+      - ./logistics.db:/app/logistics.db
+      - ./logistics_ru.db:/app/logistics_ru.db
+      - ./server.py:/app/server.py
+      # Mount frontend files for instant hot-reload without container rebuild
+      - ./index.html:/app/index.html
+      - ./styles.css:/app/styles.css
+      - ./app.js:/app/app.js
+      - ./leaflet.css:/app/leaflet.css
+      - ./leaflet.js:/app/leaflet.js
+      - ./chart.min.js:/app/chart.min.js
+      - ./executive_guide.html:/app/executive_guide.html
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PORT=8080

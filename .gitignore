@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+.venv/
+env/
+venv/
+
+# Vercel
+.vercel/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary artifacts
+screenshot*.png

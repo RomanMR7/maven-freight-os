@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAVEN FREIGHT OS // Стратегический отчет и бизнес-презентация для руководства</title>
+  
+
+
+  <style>
+    /* =====================================================================
+       PRINT & PDF CONFIGURATION (A4 STANDARD: 210mm x 297mm)
+       ===================================================================== */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    :root {
+      --c-navy-dark: #080f22;
+      --c-navy-card: #0f1c3d;
+      --c-navy-light: #162650;
+      --c-blue-accent: #0070f3;
+      --c-blue-glow: rgba(0, 112, 243, 0.25);
+      --c-cyan-accent: #00d2ff;
+      --c-gold-accent: #f5a623;
+      --c-green-accent: #10b981;
+      --c-red-accent: #ef4444;
+      
+      --c-text-dark: #0f172a;
+      --c-text-body: #334155;
+      --c-text-muted: #64748b;
+      --c-text-light: #f8fafc;
+      
+      --c-bg-light: #ffffff;
+      --c-bg-card-light: #f8fafc;
+      --c-border-light: #e2e8f0;
+      
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--c-text-body);
+      background-color: #050a17;
+      line-height: 1.45;
+      font-size: 11pt;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Screen View Container */
+    .screen-wrapper {
+      padding: 30px 0 60px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* Top Floating Action Bar (Invisible in Print) */
+    .action-bar {
+      position: sticky;
+      top: 15px;
+      z-index: 9999;
+      background: rgba(15, 28, 61, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      border-radius: 40px;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 112, 243, 0.3);
+    }
+
+    .action-btn {
+      background: linear-gradient(135deg, #0070f3 0%, #00d2ff 100%);
+      color: #ffffff;
+      font-family: var(--font-main);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 9px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 112, 243, 0.4);
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0, 210, 255, 0.5);
+    }
+
+    .action-btn.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #e2e8f0;
+      box-shadow: none;
+    }
+
+    .action-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #00d2ff;
+      color: #00d2ff;
+    }
+
+    .bar-info {
+      font-size: 12px;
+      color: #94a3b8;
+      font-family: var(--font-mono);
+    }
+
+    /* Page Canvas (A4 Dimensions) */
+    .page {
+      width: 210mm;
+      height: 297mm;
+      min-height: 297mm;
+      max-height: 297mm;
+      padding: 18mm 20mm;
+      position: relative;
+      background: var(--c-bg-light);
+      color: var(--c-text-body);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6);
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Page-specific Cover Styling */
+    .page.cover {
+      background: linear-gradient(145deg, #060b19 0%, #0c1736 60%, #081127 100%);
+      color: #ffffff;
+      padding: 24mm 22mm 20mm 22mm;
+    }
+
+    /* Running Header & Footer */
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--c-border-light);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      font-size: 8.5pt;
+      font-family: var(--font-mono);
+      color: var(--c-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .doc-header .brand {
+      color: var(--c-blue-accent);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .doc-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--c-border-light);
+      padding-top: 8px;
+      margin-top: 16px;
+      font-size: 8.5pt;
+      font-family: var(--font-mono);
+      color: var(--c-text-muted);
+    }
+
+    .doc-footer .confidential {
+      color: var(--c-gold-accent);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Typography & Hierarchy */
+    h1.report-title {
+      font-size: 26pt;
+      font-weight: 800;
+      line-height: 1.15;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    h2.section-title {
+      font-size: 15pt;
+      font-weight: 700;
+      color: var(--c-text-dark);
+      letter-spacing: -0.3px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 4px solid var(--c-blue-accent);
+      padding-left: 10px;
+    }
+
+    h3.card-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--c-text-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    p.lead-text {
+      font-size: 11pt;
+      line-height: 1.5;
+      color: var(--c-text-body);
+      margin-bottom: 14px;
+    }
+
+    /* Badges & Tags */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-blue { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .badge-gold { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-green { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
+
+    /* Card Components */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .info-card {
+      background: var(--c-bg-card-light);
+      border: 1px solid var(--c-border-light);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .info-card.accent-blue {
+      border-left: 3px solid var(--c-blue-accent);
+    }
+    .info-card.accent-gold {
+      border-left: 3px solid var(--c-gold-accent);
+    }
+    .info-card.accent-green {
+      border-left: 3px solid var(--c-green-accent);
+    }
+
+    /* Subagent Feature Cards */
+    .agent-box {
+      background: #ffffff;
+      border: 1px solid var(--c-border-light);
+      border-radius: 8px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .agent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+
+    .agent-name {
+      font-size: 11pt;
+      font-weight: 700;
+      color: var(--c-text-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* KPI Callout Box */
+    .kpi-callout {
+      background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-number {
+      font-family: var(--font-mono);
+      font-size: 18pt;
+      font-weight: 800;
+      color: var(--c-blue-accent);
+      line-height: 1.1;
+    }
+
+    .kpi-label {
+      font-size: 8pt;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--c-text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* Comparative Table */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+      margin-top: 8px;
+    }
+
+    .comp-table th {
+      background: #0f1c3d;
+      color: #ffffff;
+      text-align: left;
+      padding: 8px 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 7.5pt;
+      letter-spacing: 0.5px;
+    }
+
+    .comp-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--c-border-light);
+      color: var(--c-text-dark);
+    }
+
+    .comp-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .comp-table .bad {
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    .comp-table .good {
+      color: #059669;
+      font-weight: 700;
+    }
+
+    .comp-table .effect {
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    /* Roadmap Timeline */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .timeline-step {
+      display: flex;
+      gap: 14px;
+      background: #ffffff;
+      border: 1px solid var(--c-border-light);
+      border-radius: 6px;
+      padding: 10px 14px;
+    }
+
+    .step-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #0f1c3d;
+      color: #00d2ff;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      font-size: 13pt;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      font-size: 10pt;
+      font-weight: 700;
+      color: var(--c-text-dark);
+      margin-bottom: 2px;
+    }
+
+    .step-content p {
+      font-size: 8.5pt;
+      color: var(--c-text-muted);
+      line-height: 1.35;
+    }
+
+    /* Print Overrides */
+    @media print {
+      body {
+        background: transparent !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .screen-wrapper {
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+      .page {
+        margin: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        page-break-after: always !important;
+        break-after: page !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================================
+       Floating Action Bar (Interactive Print / PDF Trigger)
+       ===================================================================== -->
+  <div class="screen-wrapper">
+    
+    <div class="action-bar no-print">
+      <button class="action-btn" onclick="window.print();">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+        </svg>
+        Распечатать / Экспорт в PDF
+      </button>
+
+      <a href="MAVEN_FREIGHT_OS_БИЗНЕС_ПРЕЗЕНТАЦИЯ.pdf" download="MAVEN_FREIGHT_OS_БИЗНЕС_ПРЕЗЕНТАЦИЯ.pdf" class="action-btn" style="background: linear-gradient(135deg, #ffb700, #ff8800); color: #050b14; text-decoration: none; font-weight: 700;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+        </svg>
+        Скачать готовый PDF (816 KB)
+      </a>
+
+      <a href="index.html" class="action-btn secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+        Открыть Command Center
+      </a>
+
+      <span class="bar-info">📄 Формат: Премиум отчет A4 (6 страниц) • McKinsey & Gartner Style</span>
+    </div>
+
+    <!-- =====================================================================
+         PAGE 1: COVER PAGE (ПРЕМИАЛЬНАЯ ОБЛОЖКА)
+         ===================================================================== -->
+    <div class="page cover">
+      
+      <!-- Top Cover Meta -->
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 12px; margin-bottom: 40px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 32px; height: 32px; border-radius: 6px; background: rgba(0, 210, 255, 0.15); border: 1px solid #00d2ff; display: flex; align-items: center; justify-content: center; color: #00d2ff; font-weight: 800; font-size: 16px;">
+              🚛
+            </div>
+            <span style="font-family: var(--font-mono); font-size: 11pt; font-weight: 700; letter-spacing: 1.5px; color: #ffffff;">MAVEN FREIGHT OS</span>
+          </div>
+
+          <span class="badge" style="background: rgba(245, 166, 35, 0.2); border: 1px solid #f5a623; color: #f5a623;">
+            C-LEVEL STRATEGIC DOSSIER // КОНФИДЕНЦИАЛЬНО
+          </span>
+        </div>
+
+        <!-- Main Title Block -->
+        <div style="margin-top: 30px;">
+          <div style="display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(0, 112, 243, 0.25); border: 1px solid rgba(0, 210, 255, 0.4); color: #00d2ff; font-family: var(--font-mono); font-size: 9pt; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;">
+            АРХИТЕКТУРА И ЭКОНОМИКА АВТОНОМНОЙ ЛОГИСТИКИ НОВОГО ПОКОЛЕНИЯ
+          </div>
+
+          <h1 class="report-title">
+            МУЛЬТИ-АГЕНТНАЯ СИСТЕМА ДИСПЕТЧЕРИЗАЦИИ И УПРАВЛЕНИЯ ГРУЗОПЕРЕВОЗКАМИ
+          </h1>
+
+          <p style="font-size: 13pt; line-height: 1.5; color: #94a3b8; max-width: 650px; margin-top: 16px;">
+            Стратегическое руководство для Директора по логистике (CLO) и Операционного директора (COO): сокращение порожнего пробега, динамическая маршрутизация и защита чистой маржи на базе ИИ-агентов.
+          </p>
+        </div>
+      </div>
+
+      <!-- Center Feature Blueprint Graphic -->
+      <div style="background: rgba(15, 28, 61, 0.7); border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 12px; padding: 20px 24px; margin: 30px 0;">
+        <div style="font-size: 8.5pt; font-family: var(--font-mono); color: #00d2ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+          КЛЮЧЕВЫЕ БИЗНЕС-РЕЗУЛЬТАТЫ ПЛАТФОРМЫ (ПИЛОТНЫЙ ПАРК 1 420 ТЯГАЧЕЙ):
+        </div>
+
+        <div class="grid-4">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px;">
+            <div style="font-family: var(--font-mono); font-size: 20pt; font-weight: 800; color: #00d2ff;">-14.2%</div>
+            <div style="font-size: 8pt; color: #94a3b8; text-transform: uppercase; margin-top: 4px;">Холостой пробег</div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px;">
+            <div style="font-family: var(--font-mono); font-size: 20pt; font-weight: 800; color: #10b981;">98.2%</div>
+            <div style="font-size: 8pt; color: #94a3b8; text-transform: uppercase; margin-top: 4px;">SLA Своевременности</div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px;">
+            <div style="font-family: var(--font-mono); font-size: 20pt; font-weight: 800; color: #f5a623;">41.8%</div>
+            <div style="font-size: 8pt; color: #94a3b8; text-transform: uppercase; margin-top: 4px;">Чистая маржа рейса</div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px;">
+            <div style="font-family: var(--font-mono); font-size: 20pt; font-weight: 800; color: #ffffff;">2.8 мес</div>
+            <div style="font-size: 8pt; color: #94a3b8; text-transform: uppercase; margin-top: 4px;">Окупаемость (ROI)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Metadata Block -->
+      <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 16px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 8.5pt; font-family: var(--font-mono); color: #94a3b8;">
+        <div>
+          <div><strong>РАЗРАБОТЧИК:</strong> MAVEN FREIGHT SYSTEMS & APPLIED AI LAB</div>
+          <div><strong>ВЕРСИЯ ПЛАТФОРМЫ:</strong> Enterprise Edition v4.2 // Dual Engine (РФ & USA)</div>
+          <div><strong>БАЗОВЫЙ ДАТАСЕТ:</strong> 10 195+ рейсов, 6 РЦ России & 5 хабов США</div>
+        </div>
+
+        <div style="text-align: right;">
+          <div><strong>ДАТА ВЫПУСКА:</strong> Октябрь 2026 г.</div>
+          <div><strong>СТАТУС:</strong> ГОТОВО К РАЗВЕРТЫВАНИЮ В КОРПОРАТИВНЫЙ КОНТУР</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =====================================================================
+         PAGE 2: EXECUTIVE SUMMARY & СИСТЕМНЫЕ ВЫЗОВЫ ИНДУСТРИИ
+         ===================================================================== -->
+    <div class="page">
+      
+      <!-- Running Header -->
+      <div class="doc-header">
+        <span class="brand">MAVEN FREIGHT OS // СТРАТЕГИЧЕСКИЙ ОТЧЕТ</span>
+        <span>РАЗДЕЛ 01: РУКОВОДЯЩЕЕ РЕЗЮМЕ И ПРОБЛЕМАТИКА</span>
+      </div>
+
+      <!-- Page Content -->
+      <div>
+        <h2 class="section-title">01. Руководящее резюме: кризис классического диспетчирования</h2>
+        
+        <p class="lead-text">
+          Современный сектор магистральных грузоперевозок находится под беспрецедентным давлением: рост стоимости дизельного топлива, дефицит водителей категории CE (свыше 21% вакансий по отрасли), ужесточение весогабаритного контроля (АПВГК) и обязательный режим труда и отдыха (РТО по тахографу ЕСТР). Традиционные методы планирования через Excel и ручные TMS исчерпали свою эффективность.
+        </p>
+
+        <!-- 4 Critical Bottlenecks -->
+        <div style="margin-top: 14px; margin-bottom: 18px;">
+          <h3 style="font-size: 11pt; font-weight: 700; color: var(--c-text-dark); margin-bottom: 8px;">
+            4 Системных барьера, сдерживающих рентабельность автопарков:
+          </h3>
+
+          <div class="grid-2">
+            <div class="info-card accent-blue">
+              <h3 class="card-title">1. Высокая доля порожнего пробега (Deadhead)</h3>
+              <p style="font-size: 9pt; color: var(--c-text-body); line-height: 1.4;">
+                В среднем по рынку от 16% до 22% километров тягачи проходят пустыми при возврате на распределительный центр (РЦ). Это приводит к прямым потерям топлива и амортизации без генерации выручки.
+              </p>
+            </div>
+
+            <div class="info-card accent-gold">
+              <h3 class="card-title">2. Скорость и ошибки ручной диспетчеризации</h3>
+              <p style="font-size: 9pt; color: var(--c-text-body); line-height: 1.4;">
+                Распределение 50-100 сборных заявок (LTL) по фурам занимает у смены логистов от 3 до 5 часов. Человеческий фактор приводит к недогрузу полуприцепов на 18-24% объема.
+              </p>
+            </div>
+
+            <div class="info-card accent-green">
+              <h3 class="card-title">3. Срывы SLA и порча скоропортящейся продукции</h3>
+              <p style="font-size: 9pt; color: var(--c-text-body); line-height: 1.4;">
+                При перевозке кондитерских изделий (шоколад, конфеты) нарушение температурного режима (+16...+18°C) даже на 2 часа приводит к браку всей партии. Штрафы торговых сетей достигают 15% стоимости поставки.
+              </p>
+            </div>
+
+            <div class="info-card" style="border-left: 3px solid var(--c-red-accent);">
+              <h3 class="card-title">4. Непрозрачность себестоимости и дорожных сборов</h3>
+              <p style="font-size: 9pt; color: var(--c-text-body); line-height: 1.4;">
+                Без онлайн-учета тарифов системы «Платон» (3.05 ₽/км), стоимости платных магистралей (М-11, М-12, М-4) и динамики цен на ДТ реальная маржинальность рейса становится ясна только постфактум.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Strategic Solution Block -->
+        <div style="background: linear-gradient(135deg, #0f1c3d 0%, #162650 100%); border-radius: 8px; padding: 16px 20px; color: #ffffff; margin-top: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-family: var(--font-mono); font-size: 8.5pt; color: #00d2ff; font-weight: 700; text-transform: uppercase;">
+              СТРАТЕГИЧЕСКИЙ ОТВЕТ: MAVEN FREIGHT OS
+            </span>
+            <span class="badge badge-gold">ПАРАДИГМА АВТОНОМНОГО УПРАВЛЕНИЯ</span>
+          </div>
+
+          <p style="font-size: 9.5pt; line-height: 1.45; color: #cbd5e1;">
+            MAVEN FREIGHT OS заменяет ручной труд децентрализованной сетью из 4 специализированных ИИ-агентов. Система за миллисекунды рассчитывает оптимальные 3D-укладки полуприцепов, выбирает надежных перевозчиков, прогнозирует заторы и поломки по ГЛОНАСС и мгновенно оформляет юридически значимые ЭТрН.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Running Footer -->
+      <div class="doc-footer">
+        <span>MAVEN FREIGHT OS // ENTERPRISE ROADMAP</span>
+        <span class="confidential">КОНФИДЕНЦИАЛЬНО // ДЛЯ РУКОВОДСТВА</span>
+        <span>СТРАНИЦА 02 ИЗ 06</span>
+      </div>
+
+    </div>
+
+    <!-- =====================================================================
+         PAGE 3: АРХИТЕКТУРА 4 АВТОНОМНЫХ САБ-АГЕНТОВ
+         ===================================================================== -->
+    <div class="page">
+      
+      <!-- Running Header -->
+      <div class="doc-header">
+        <span class="brand">MAVEN FREIGHT OS // СТРАТЕГИЧЕСКИЙ ОТЧЕТ</span>
+        <span>РАЗДЕЛ 02: АРХИТЕКТУРА МУЛЬТИ-АГЕНТНОГО ХАБА</span>
+      </div>
+
+      <!-- Page Content -->
+      <div>
+        <h2 class="section-title">02. Четыре саб-агента: роли, алгоритмы и синергия</h2>
+        
+        <p class="lead-text">
+          Архитектура платформы базируется на разделении ответственности между четырьмя специализированными агентами, синхронизированными через высокоскоростную шину событий в реальном времени.
+        </p>
+
+        <!-- The 4 Subagents Grid -->
+        <div class="grid-2" style="margin-top: 10px;">
+          
+          <!-- Agent 1: APEX -->
+          <div class="agent-box" style="border-top: 3px solid var(--c-cyan-accent);">
+            <div class="agent-header">
+              <div class="agent-name">
+                <span>🤖</span> <strong>АПЕКС (APEX)</strong>
+              </div>
+              <span class="badge badge-blue">АВТОНОМНЫЙ ДИСПЕТЧЕР</span>
+            </div>
+            <p style="font-size: 8.5pt; color: var(--c-text-body); line-height: 1.35;">
+              <strong>Ключевая задача:</strong> Пакетная консолидация разрозненных заказов (LTL) в полноценные фуры (FTL), подбор подвижного состава и распределение по пулу проверенных перевозчиков.
+            </p>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 10px; font-size: 8pt; font-family: var(--font-mono);">
+              <div>• Алгоритм: Эвристический 3D Bin-Packing</div>
+              <div>• Загрузка автопоездов: <strong>96.8% полезного объема</strong></div>
+              <div>• Партнеры: Деловые Линии, ПЭК, Монополия, ИТЕКО</div>
+            </div>
+          </div>
+
+          <!-- Agent 2: PATHFINDER -->
+          <div class="agent-box" style="border-top: 3px solid var(--c-gold-accent);">
+            <div class="agent-header">
+              <div class="agent-name">
+                <span>🧭</span> <strong>СЛЕДОПЫТ (PATHFINDER)</strong>
+              </div>
+              <span class="badge badge-gold">ОПТИМИЗАТОР МАРШРУТОВ</span>
+            </div>
+            <p style="font-size: 8.5pt; color: var(--c-text-body); line-height: 1.35;">
+              <strong>Ключевая задача:</strong> Динамическая прокладка магистральных маршрутов с учетом весовых рамок АПВГК, объезда ремонтных участков и минимизации холостого пробега.
+            </p>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 10px; font-size: 8pt; font-family: var(--font-mono);">
+              <div>• Магистрали: М-11 «Нева», М-12 «Восток», М-4 «Дон»</div>
+              <div>• Сокращение холостого пробега: <strong>-14.2% км</strong></div>
+              <div>• Экономия топлива: <strong>8 420 литров ДТ / месяц</strong></div>
+            </div>
+          </div>
+
+          <!-- Agent 3: SENTINEL -->
+          <div class="agent-box" style="border-top: 3px solid var(--c-green-accent);">
+            <div class="agent-header">
+              <div class="agent-name">
+                <span>📡</span> <strong>ЧАСОВОЙ (SENTINEL)</strong>
+              </div>
+              <span class="badge badge-green">ГЛОНАСС & ТЕЛЕМАТИКА</span>
+            </div>
+            <p style="font-size: 8.5pt; color: var(--c-text-body); line-height: 1.35;">
+              <strong>Ключевая задача:</strong> Непрерывный опрос бортовых датчиков, термописцев рефрижератора (+16...+18°C) и контроль режима труда и отдыха (РТО) водителей по тахографу.
+            </p>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 10px; font-size: 8pt; font-family: var(--font-mono);">
+              <div>• Частота телематического пинга: <strong>каждые 32 мс</strong></div>
+              <div>• Стабильность температурного режима: <strong>100%</strong></div>
+              <div>• Точность соблюдения SLA доставки: <strong>98.2%</strong></div>
+            </div>
+          </div>
+
+          <!-- Agent 4: VERITAS -->
+          <div class="agent-box" style="border-top: 3px solid #b388ff;">
+            <div class="agent-header">
+              <div class="agent-name">
+                <span>⚖️</span> <strong>АУДИТОР (VERITAS)</strong>
+              </div>
+              <span class="badge" style="background: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe;">ЭКОНОМИКА & ПЛАТОН</span>
+            </div>
+            <p style="font-size: 8.5pt; color: var(--c-text-body); line-height: 1.35;">
+              <strong>Ключевая задача:</strong> Автоматический аудит юнит-экономики каждого рейса (ставка фрахта, себестоимость км, дорожные сборы) и выпуск юридически чистых ЭТрН.
+            </p>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 10px; font-size: 8pt; font-family: var(--font-mono);">
+              <div>• Средняя ставка фрахта: <strong>110 ₽ / км</strong></div>
+              <div>• Автоматический учет сборов: <strong>Система «Платон»</strong></div>
+              <div>• Гарантированная чистая маржинальность: <strong>41.8%</strong></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Workflow Diagram Box -->
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 12px 16px; margin-top: 14px;">
+          <div style="font-size: 8.5pt; font-family: var(--font-mono); color: var(--c-blue-accent); font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">
+            ПОСЛЕДОВАТЕЛЬНЫЙ АВТОНОМНЫЙ ЦИКЛ ОБРАБОТКИ ЗАКАЗА:
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 8pt; font-family: var(--font-mono); color: var(--c-text-dark); text-align: center;">
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; flex: 1;">
+              1. Заявки с РЦ<br><span style="color:var(--c-text-muted);">Входной пул</span>
+            </div>
+            <span style="color: var(--c-blue-accent); font-weight: bold; margin: 0 4px;">➔</span>
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; flex: 1;">
+              2. Апекс<br><span style="color:var(--c-text-muted);">3D-пакет & ТК</span>
+            </div>
+            <span style="color: var(--c-blue-accent); font-weight: bold; margin: 0 4px;">➔</span>
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; flex: 1;">
+              3. Следопыт<br><span style="color:var(--c-text-muted);">Трасса & РТО</span>
+            </div>
+            <span style="color: var(--c-blue-accent); font-weight: bold; margin: 0 4px;">➔</span>
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; flex: 1;">
+              4. Часовой<br><span style="color:var(--c-text-muted);">ГЛОНАСС борт</span>
+            </div>
+            <span style="color: var(--c-blue-accent); font-weight: bold; margin: 0 4px;">➔</span>
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; flex: 1;">
+              5. Аудитор<br><span style="color:var(--c-text-muted);">ЭТрН + КЭП</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Running Footer -->
+      <div class="doc-footer">
+        <span>MAVEN FREIGHT OS // ENTERPRISE ROADMAP</span>
+        <span class="confidential">КОНФИДЕНЦИАЛЬНО // ДЛЯ РУКОВОДСТВА</span>
+        <span>СТРАНИЦА 03 ИЗ 06</span>
+      </div>
+
+    </div>
+
+    <!-- =====================================================================
+         PAGE 4: ИНТЕРФЕЙС COMMAND CENTER И ТЕХНИЧЕСКИЙ СТЕК
+         ===================================================================== -->
+    <div class="page">
+      
+      <!-- Running Header -->
+      <div class="doc-header">
+        <span class="brand">MAVEN FREIGHT OS // СТРАТЕГИЧЕСКИЙ ОТЧЕТ</span>
+        <span>РАЗДЕЛ 03: КОМАНДНЫЙ ЦЕНТР И ТЕХНОЛОГИИ</span>
+      </div>
+
+      <!-- Page Content -->
+      <div>
+        <h2 class="section-title">03. Цифровой командный центр и интеграционный стек</h2>
+        
+        <p class="lead-text">
+          Интерфейс оператора выполнен по стандарту Dark HUD космического класса с мгновенным переключением между логистическими экосистемами Российской Федерации и США в один клик.
+        </p>
+
+        <!-- Command Center Capabilities -->
+        <div class="grid-3" style="margin-top: 10px; margin-bottom: 16px;">
+          
+          <div class="info-card accent-blue">
+            <h3 class="card-title">🌐 Двухконтурный режим</h3>
+            <p style="font-size: 8.5pt; color: var(--c-text-body); line-height: 1.35;">
+              Мгновенный переход между РФ (рубли, километры, ГЛОНАСС, трассы М-11/М-12, Платон) и США (USD, мили, Interstate, HOS DOT). Полная адаптация всех метрик на лету.
+            </p>
+          </div>
+
+          <div class="info-card accent-gold">
+            <h3 class="card-title">🗺️ Векторный ГИС-радар</h3>
+            <p style="font-size: 8.5pt; color: var(--c-text-body); line-height: 1.35;">
+              Интерактивная карта Leaflet с неоновой визуализацией 6 кондитерских фабрик РФ, анимированными коридорами автопоездов и координатной сеткой телеметрии.
+            </p>
+          </div>
+
+          <div class="info-card accent-green">
+            <h3 class="card-title">📑 Реестр ЭТрН с КЭП</h3>
+            <p style="font-size: 8.5pt; color: var(--c-text-body); line-height: 1.35;">
+              Полноценная цифровая транспортная накладная: верификация КЭП через ГИС ЭПД (ФНС России), путевой лист, весовой контроль АПВГК и температурный чек.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Technical Architecture Overview -->
+        <div style="border: 1px solid var(--c-border-light); border-radius: 8px; padding: 14px 18px; background: #ffffff;">
+          <h3 style="font-size: 11pt; font-weight: 700; color: var(--c-text-dark); margin-bottom: 8px;">
+            Корпоративный стек надежности и безопасности:
+          </h3>
+
+          <div class="grid-2" style="font-size: 8.5pt; line-height: 1.45;">
+            <div>
+              <p><strong>• Локальный микросервер без тяжелых фреймворков:</strong> архитектура на базе стандартных библиотек гарантирует холодный старт платформы за 0.2 секунды.</p>
+              <p style="margin-top: 6px;"><strong>• База данных SQLite в режиме WAL:</strong> потокобезопасная работа с миллисекундным откликом на 10 000+ рейсов и историей путевых листов.</p>
+            </div>
+            <div>
+              <p><strong>• Zero-Dependency Frontend:</strong> встроенные локальные библиотеки Leaflet и Chart.js обеспечивают 100% автономную работу в изолированном контуре без интернета.</p>
+              <p style="margin-top: 6px;"><strong>• REST API интеграция:</strong> легкое сопряжение с корпоративными системами 1С:Предприятие 8, SAP S/4HANA, WMS и Wialon/Omnicomm.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Production Deployment Box -->
+        <div style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px; margin-top: 14px; font-family: var(--font-mono); font-size: 8pt; color: var(--c-text-dark);">
+          <div style="font-weight: 700; color: var(--c-blue-accent); margin-bottom: 4px;">РЕЖИМЫ РАЗВЕРТЫВАНИЯ:</div>
+          <div>1. Локальный автономный запуск в 1 клик: <strong>start.bat</strong> (автопроверка БД + браузер)</div>
+          <div>2. Enterprise Docker-контейнеризация: <strong>docker-start.bat</strong> (Alpine Linux, 128MB RAM)</div>
+        </div>
+
+      </div>
+
+      <!-- Running Footer -->
+      <div class="doc-footer">
+        <span>MAVEN FREIGHT OS // ENTERPRISE ROADMAP</span>
+        <span class="confidential">КОНФИДЕНЦИАЛЬНО // ДЛЯ РУКОВОДСТВА</span>
+        <span>СТРАНИЦА 04 ИЗ 06</span>
+      </div>
+
+    </div>
+
+    <!-- =====================================================================
+         PAGE 5: СРАВНИТЕЛЬНЫЙ АНАЛИЗ ДО/ПОСЛЕ И ROI
+         ===================================================================== -->
+    <div class="page">
+      
+      <!-- Running Header -->
+      <div class="doc-header">
+        <span class="brand">MAVEN FREIGHT OS // СТРАТЕГИЧЕСКИЙ ОТЧЕТ</span>
+        <span>РАЗДЕЛ 04: ЭКОНОМИЧЕСКИЙ ЭФФЕКТ И ROI</span>
+      </div>
+
+      <!-- Page Content -->
+      <div>
+        <h2 class="section-title">04. Сравнительный анализ ДО/ПОСЛЕ и юнит-экономика</h2>
+        
+        <p class="lead-text">
+          Внедрение мульти-агентного комплекса MAVEN FREIGHT OS кардинально меняет структуру операционных затрат автопарка, превращая логистику из центра затрат в генератор маржи.
+        </p>
+
+        <!-- Comparative Table: BEFORE vs AFTER -->
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th style="width: 28%;">Операционная метрика</th>
+              <th style="width: 24%;">Традиционная логистика</th>
+              <th style="width: 26%;">С MAVEN FREIGHT OS</th>
+              <th style="width: 22%;">Бизнес-эффект</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Холостой пробег (Deadhead)</strong></td>
+              <td class="bad">18.5% пробега</td>
+              <td class="good">4.3% пробега</td>
+              <td class="effect">-14.2% пустых км</td>
+            </tr>
+            <tr>
+              <td><strong>Время формирования партии</strong></td>
+              <td class="bad">3.5 – 5.0 часов</td>
+              <td class="good">1.8 секунды (ИИ)</td>
+              <td class="effect">В 9 000 раз быстрее</td>
+            </tr>
+            <tr>
+              <td><strong>Коэффициент загрузки фуры</strong></td>
+              <td class="bad">78.4% объема</td>
+              <td class="good">96.8% объема</td>
+              <td class="effect">+18.4% вместимости</td>
+            </tr>
+            <tr>
+              <td><strong>Соблюдение SLA графика</strong></td>
+              <td class="bad">86.2% своевременно</td>
+              <td class="good">98.2% своевременно</td>
+              <td class="effect">+12.0% надежности</td>
+            </tr>
+            <tr>
+              <td><strong>Брак от срыва терморежима</strong></td>
+              <td class="bad">2.8% кондитерских партий</td>
+              <td class="good">0.02% (ГЛОНАСС датчик)</td>
+              <td class="effect">Ликвидация брака</td>
+            </tr>
+            <tr>
+              <td><strong>Штрафы за перегруз и РТО</strong></td>
+              <td class="bad">до 450 000 ₽ / тягач / год</td>
+              <td class="good">0 ₽ (автоконтроль)</td>
+              <td class="effect">100% безопасность</td>
+            </tr>
+            <tr>
+              <td><strong>Средняя рентабельность рейса</strong></td>
+              <td class="bad">16.4% чистой маржи</td>
+              <td class="good">41.8% чистой маржи</td>
+              <td class="effect">+25.4% чистой прибыли</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ROI Callout Grid -->
+        <div style="margin-top: 18px;">
+          <h3 style="font-size: 11pt; font-weight: 700; color: var(--c-text-dark); margin-bottom: 8px;">
+            Финансовая модель эффекта на автопарк из 1 000 магистральных тягачей:
+          </h3>
+
+          <div class="grid-3">
+            <div class="kpi-callout">
+              <span class="kpi-number">+142 000 000 ₽</span>
+              <span class="kpi-label">Чистая годовая экономия на топливе</span>
+            </div>
+
+            <div class="kpi-callout">
+              <span class="kpi-number">+38 400 000 ₽</span>
+              <span class="kpi-label">Экономия на штрафах и простое</span>
+            </div>
+
+            <div class="kpi-callout">
+              <span class="kpi-number">2.8 месяца</span>
+              <span class="kpi-label">Срок полной окупаемости проекта</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quote Block -->
+        <div style="border-left: 3px solid var(--c-gold-accent); background: #fffbeb; padding: 10px 14px; border-radius: 4px; margin-top: 14px; font-size: 8.5pt; color: #92400e;">
+          <strong>Вывод финансового аудита:</strong> Автоматическая консолидация LTL-партий и оптимизация коридоров М-11/М-12/М-4 компенсирует рост ключевой ставки и затрат на лизинг подвижного состава в первый же квартал эксплуатации.
+        </div>
+
+      </div>
+
+      <!-- Running Footer -->
+      <div class="doc-footer">
+        <span>MAVEN FREIGHT OS // ENTERPRISE ROADMAP</span>
+        <span class="confidential">КОНФИДЕНЦИАЛЬНО // ДЛЯ РУКОВОДСТВА</span>
+        <span>СТРАНИЦА 05 ИЗ 06</span>
+      </div>
+
+    </div>
+
+    <!-- =====================================================================
+         PAGE 6: ДОРОЖНАЯ КАРТА ВНЕДРЕНИЯ И КОНТАКТЫ
+         ===================================================================== -->
+    <div class="page">
+      
+      <!-- Running Header -->
+      <div class="doc-header">
+        <span class="brand">MAVEN FREIGHT OS // СТРАТЕГИЧЕСКИЙ ОТЧЕТ</span>
+        <span>РАЗДЕЛ 05: ДОРОЖНАЯ КАРТА И ЗАПУСК</span>
+      </div>
+
+      <!-- Page Content -->
+      <div>
+        <h2 class="section-title">05. Дорожная карта внедрения (Rollout Roadmap)</h2>
+        
+        <p class="lead-text">
+          Развертывание платформы MAVEN FREIGHT OS разделено на 4 четких этапа с гарантированным сохранением непрерывности текущей логистической деятельности предприятия:
+        </p>
+
+        <!-- 4-Step Timeline -->
+        <div class="timeline">
+          
+          <div class="timeline-step">
+            <div class="step-badge">01</div>
+            <div class="step-content">
+              <h4>ЭТАП 1: АУДИТ ДАННЫХ И ШЛЮЗЫ ИНТЕГРАЦИИ (НЕДЕЛИ 1 – 2)</h4>
+              <p>Подключение коннекторов к 1С:ERP, SAP или корпоративной TMS. Интеграция телематических шлюзов Wialon / Omnicomm. Загрузка исторических маршрутов и спецификаций подвижного состава.</p>
+            </div>
+          </div>
+
+          <div class="timeline-step">
+            <div class="step-badge">02</div>
+            <div class="step-content">
+              <h4>ЭТАП 2: ПИЛОТ НА ОПОРНЫХ КОРИДОРАХ (НЕДЕЛИ 3 – 4)</h4>
+              <p>Запуск пилотной группы из 100 тягачей на ключевых направлениях (например, Москва ➔ Санкт-Петербург М-11, Москва ➔ Краснодар М-4). Калибровка весовых и температурных профилей Апекса и Следопыта.</p>
+            </div>
+          </div>
+
+          <div class="timeline-step">
+            <div class="step-badge">03</div>
+            <div class="step-content">
+              <h4>ЭТАП 3: МАСШТАБИРОВАНИЕ НА ВСЮ СЕТЬ РЦ (НЕДЕЛИ 5 – 8)</h4>
+              <p>Подключение всех 6 кондитерских фабрик и региональных РЦ. Включение автоматического модуля подписания ЭТрН через КЭП. Инструктаж сменных диспетчеров и логистов.</p>
+            </div>
+          </div>
+
+          <div class="timeline-step">
+            <div class="step-badge">04</div>
+            <div class="step-content">
+              <h4>ЭТАП 4: ПОЛНАЯ АВТОНОМНАЯ ОРКЕСТРАЦИЯ (НЕДЕЛЯ 9+)</h4>
+              <p>Перевод регулярных рейсов в режим полной автономности: саб-агенты самостоятельно пакетируют грузы, назначают перевозчиков, контролируют РТО и проводят финансовый аудит.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Next Steps / Executive Call to Action Box -->
+        <div style="background: linear-gradient(135deg, #0f1c3d 0%, #1e293b 100%); border-radius: 8px; padding: 14px 18px; color: #ffffff; margin-top: 18px;">
+          <h3 style="font-size: 11pt; font-weight: 700; color: #00d2ff; margin-bottom: 4px;">
+            СЛЕДУЮЩИЙ ШАГ ДЛЯ РУКОВОДСТВА:
+          </h3>
+          <p style="font-size: 8.5pt; color: #cbd5e1; line-height: 1.4;">
+            Мы готовы развернуть демонстрационный стенд MAVEN FREIGHT OS на исторических данных вашего автопарка за 48 часов, чтобы рассчитать точный потенциал сокращения порожнего пробега и роста EBITDA.
+          </p>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; font-size: 8pt; font-family: var(--font-mono);">
+            <div><strong>ДЕМО-ДОСТУП:</strong> http://localhost:8080</div>
+            <div><strong>СТАТУС СИСТЕМЫ:</strong> ВСЕ СЕРВИСЫ В СЕТИ [ONLINE]</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Running Footer -->
+      <div class="doc-footer">
+        <span>MAVEN FREIGHT OS // ENTERPRISE ROADMAP</span>
+        <span class="confidential">КОНФИДЕНЦИАЛЬНО // ДЛЯ РУКОВОДСТВА</span>
+        <span>СТРАНИЦА 06 ИЗ 06</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

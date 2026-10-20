@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">MAVEN FREIGHT OS // СИСТЕМА УПРАВЛЕНИЯ ЛОГИСТИКОЙ И ДАЛЬНОБОЙЩИКАМИ РФ</title>
+  
+  <!-- Leaflet Map CSS Local -->
+  <link rel="stylesheet" href="leaflet.css">
+        
+  <!-- Main HUD Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Favicon icon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f0ff'><path d='M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z'/></svg>">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- =====================================================================
+         Top Header: Operational Status & System Telemetry + Mode Switcher
+         ===================================================================== -->
+    <header class="header-bar">
+      <div class="brand-section">
+        <div class="brand-icon-box">
+          <!-- Truck Icon -->
+          <svg viewBox="0 0 24 24">
+            <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 id="header-brand-title">MAVEN FREIGHT <span class="accent">OS</span> // СИСТЕМА УПРАВЛЕНИЯ ЛОГИСТИКОЙ И ДАЛЬНОБОЙЩИКАМИ РФ</h1>
+          <p id="header-brand-subtitle">
+            <span id="sub-tagline">АВТОНОМНАЯ МУЛЬТИ-АГЕНТНАЯ ДИСПЕТЧЕРИЗАЦИЯ И СЕТЬ ДАЛЬНОБОЙЩИКОВ РФ</span>
+            <span style="color: var(--neon-cyan);">•</span>
+            <span id="sub-telemetry-tag" style="color: var(--neon-amber);">ФЕДЕРАЛЬНАЯ ТЕЛЕМАТИКА ГЛОНАСС & РЦ</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="header-status-ribbon">
+        <!-- Dual-Mode Interactive Switch (RU / US) -->
+        <div class="mode-switch-group" id="mode-switch-group" title="Переключение режима логистики (РФ / США)">
+          <button class="mode-btn active" id="btn-mode-ru" data-mode="ru">🇷🇺 РФ (РУБ / КМ)</button>
+          <button class="mode-btn" id="btn-mode-us" data-mode="us">🇺🇸 США (USD / МИЛИ)</button>
+        </div>
+
+        <!-- Live System Status -->
+        <div class="hud-pill online">
+          <span class="dot"></span>
+          <span id="pill-system-status">СИСТЕМА В СЕТИ</span>
+        </div>
+
+        <!-- Active Fleet Counter -->
+        <div class="hud-pill fleet-status">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.8;">
+            <path d="M4 16c0 1.1.9 2 2 2h1v2h2v-2h6v2h2v-2h1c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v10zm2-8h12v5H6V8z"/>
+          </svg>
+          <span id="pill-fleet-label">АКТИВНЫЙ ФЛОТ: <strong id="header-active-fleet">1 420</strong> ТЯГАЧЕЙ</span>
+        </div>
+
+        <!-- Live Clock -->
+        <div class="hud-pill clock-display" id="hud-clock">
+          МСК 12:00:00 • ПРЯМОЙ ЭФИР
+        </div>
+
+        <!-- Backend Connection Indicator -->
+        <div class="hud-pill connection-status" id="backend-indicator" title="Нажмите для проверки соединения">
+          <span class="dot"></span>
+          <span id="backend-status-text">ПРОВЕРКА СВЯЗИ...</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- =====================================================================
+         Top KPI Ribbon (5 Critical Freight Performance Cards)
+         ===================================================================== -->
+    <section class="kpi-ribbon" aria-label="Ключевые показатели эффективности">
+      
+      <!-- Card 1: Freight Volume -->
+      <div class="kpi-card" id="kpi-volume-card">
+        <div class="kpi-header">
+          <span class="kpi-title" id="kpi-title-volume">Общий объём перевозок</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpi-total-volume">10 195</span>
+          <span class="kpi-unit" id="kpi-unit-volume">рейсов</span>
+        </div>
+        <div class="kpi-subtext">
+          <span id="kpi-sub-volume">Груз: <strong id="kpi-total-units">38 654</strong> поддонов</span>
+          <span class="kpi-trend positive" id="kpi-trend-volume">↑ +8.4% к АППГ</span>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" style="width: 88%; background: var(--neon-cyan);"></div>
+        </div>
+      </div>
+
+      <!-- Card 2: Miles / KM Logged -->
+      <div class="kpi-card" id="kpi-distance-card">
+        <div class="kpi-header">
+          <span class="kpi-title" id="kpi-title-distance">Пробег автопарка</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpi-total-distance">20 672 500</span>
+          <span class="kpi-unit" id="kpi-unit-distance">км</span>
+        </div>
+        <div class="kpi-subtext">
+          <span id="kpi-sub-distance">Плечо: <strong id="kpi-avg-haul">1 260</strong> км</span>
+          <span class="kpi-trend optimal" id="kpi-trend-distance">↓ -3.2% холостой ход</span>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" style="width: 92%; background: var(--neon-amber);"></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Transit Time & SLA -->
+      <div class="kpi-card" id="kpi-transit-card">
+        <div class="kpi-header">
+          <span class="kpi-title" id="kpi-title-transit">Срок доставки (SLA)</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpi-avg-transit">3.4</span>
+          <span class="kpi-unit" id="kpi-unit-transit">дней</span>
+        </div>
+        <div class="kpi-subtext">
+          <span id="kpi-sub-transit">Точность SLA: <strong id="kpi-ontime-rate">98.2%</strong></span>
+          <span class="kpi-trend positive" id="kpi-trend-transit">↑ -0.6 дн от графика</span>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" style="width: 96%; background: var(--neon-green);"></div>
+        </div>
+      </div>
+
+      <!-- Card 4: Revenue & Profit Margin -->
+      <div class="kpi-card" id="kpi-revenue-card">
+        <div class="kpi-header">
+          <span class="kpi-title" id="kpi-title-revenue">Выручка и рентабельность</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpi-total-revenue">186 090 000 ₽</span>
+          <span class="kpi-unit" id="kpi-unit-revenue">оборот</span>
+        </div>
+        <div class="kpi-subtext">
+          <span id="kpi-sub-revenue">Чистая маржа: <strong id="kpi-net-margin">41.8%</strong></span>
+          <span class="kpi-trend positive" id="kpi-trend-revenue">⚡ Ставка 165 ₽/км</span>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" style="width: 82%; background: var(--neon-purple);"></div>
+        </div>
+      </div>
+
+      <!-- Card 5: Fleet Utilization & Drivers -->
+      <div class="kpi-card" id="kpi-fleet-card">
+        <div class="kpi-header">
+          <span class="kpi-title" id="kpi-title-fleet">Автопарк и дальнобойщики</span>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          </div>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpi-active-drivers">1 284</span>
+          <span class="kpi-unit" id="kpi-unit-drivers">водителей CE</span>
+        </div>
+        <div class="kpi-subtext">
+          <span id="kpi-sub-fleet">Загрузка парка: <strong id="kpi-fleet-util">92.4%</strong></span>
+          <span class="kpi-trend optimal" id="kpi-trend-fleet">⚡ Пик эффективности</span>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-progress-bar" style="width: 92%; background: var(--neon-pink);"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         Interactive Control & Filter Bar
+         ===================================================================== -->
+    <section class="control-bar" aria-label="Фильтры и поиск">
+      <div class="filter-group">
+        <div class="filter-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+          </svg>
+          <span id="lbl-filters-title">Фильтры:</span>
+        </div>
+
+        <!-- Factory Filter -->
+        <select class="filter-select" id="filter-factory" title="Выбор фабрики отправления">
+          <!-- Populated dynamically based on mode -->
+        </select>
+
+        <!-- Shipping Class Filter -->
+        <select class="filter-select" id="filter-ship-mode" title="Выбор класса рейса">
+          <!-- Populated dynamically based on mode -->
+        </select>
+
+        <!-- Destination State / Region Filter -->
+        <select class="filter-select" id="filter-state" title="Выбор региона назначения">
+          <!-- Populated dynamically based on mode -->
+        </select>
+
+        <!-- Status Filter -->
+        <select class="filter-select" id="filter-status" title="Статус рейса">
+          <!-- Populated dynamically based on mode -->
+        </select>
+      </div>
+
+      <!-- Search Input -->
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="filter-search" class="search-input" placeholder="Поиск по ТТН, городу, водителю, госномеру..." />
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="control-actions">
+        <button class="btn-secondary" id="btn-reset-filters" title="Сбросить все критерии фильтрации">
+          <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          <span id="btn-reset-label">Сброс</span>
+        </button>
+
+        <button class="btn-secondary" id="btn-refresh-data" title="Синхронизация с сервером">
+          <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+          <span id="btn-sync-label">Синхронизация</span>
+        </button>
+
+        <a href="executive_guide.html" target="_blank" class="btn-secondary" id="btn-open-guide" title="Открыть интерактивную презентацию для руководства" style="color: var(--neon-cyan); border-color: rgba(0, 240, 255, 0.4); text-decoration: none;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <span id="btn-guide-label">📄 Презентация (C-Level)</span>
+        </a>
+
+        <a href="MAVEN_FREIGHT_OS_БИЗНЕС_ПРЕЗЕНТАЦИЯ.pdf" download="MAVEN_FREIGHT_OS_БИЗНЕС_ПРЕЗЕНТАЦИЯ.pdf" class="btn-secondary" id="btn-download-pdf" title="Скачать скомпилированный PDF-документ (816 KB)" style="color: var(--amber-glow); border-color: rgba(255, 183, 0, 0.4); text-decoration: none;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          <span>⬇️ PDF (816 KB)</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         Main Grid: Interactive Map (Left) + Subagents Dispatch Hub (Right)
+         ===================================================================== -->
+    <div class="main-grid">
+
+      <!-- Left Column: Map -->
+      <section class="map-panel" aria-label="Карта грузоперевозок">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+            <span id="map-panel-title">Федеральные трассы и кондитерские РЦ (ГЛОНАСС Телематика)</span>
+          </div>
+
+          <div class="panel-tools">
+            <select class="map-basemap-select" id="map-basemap-select" title="Подложка карты (Google Maps / Спутник / Тёмная)">
+              <option value="google-hybrid" selected>🛰️ Google Гибрид</option>
+              <option value="google-satellite">🌍 Google Спутник</option>
+              <option value="google-roadmap">🗺️ Google Схема</option>
+              <option value="google-terrain">⛰️ Google Рельеф</option>
+              <option value="carto-dark">🌙 Тёмная тема</option>
+              <option value="osm">🛣️ OpenStreetMap</option>
+            </select>
+            <button class="map-layer-btn active" id="btn-toggle-routes" data-state="active">Маршруты: ВКЛ</button>
+            <button class="map-layer-btn active" id="btn-toggle-factories" data-state="active">Фабрики: 6</button>
+            <button class="map-layer-btn" id="btn-reset-map" title="Центрировать карту">Центр</button>
+          </div>
+        </div>
+
+        <div class="map-container">
+          <!-- Leaflet Map Mount Point -->
+          <div id="map"></div>
+
+          <!-- Fallback Map Canvas -->
+          <div id="map-fallback" class="map-fallback-view" style="display: none;">
+            <svg class="map-fallback-svg" viewBox="0 0 960 560" id="fallback-svg-canvas"></svg>
+          </div>
+
+          <!-- GPS / GLONASS Telemetry Overlay -->
+          <div class="map-hud-overlay">
+            <div>РАДАР: <span class="coord" id="hud-radar-status">МОНИТОРИНГ ФЕДЕРАЛЬНЫХ ТРАСС РФ</span></div>
+            <div>КУРСОР: <span class="coord" id="hud-latlng">55.7558° N, 37.6173° E</span></div>
+            <div>АКТИВНЫЕ РЕЙСЫ: <span class="coord" id="hud-active-lanes">48 НАПРАВЛЕНИЙ</span></div>
+          </div>
+
+          <!-- Map Color Legend -->
+          <div class="map-legend" id="map-legend-box">
+            <!-- Injected dynamically by app.js based on mode -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Subagents Autonomous Dispatch Hub -->
+      <section class="agents-panel" aria-label="Диспетчерский Хаб Саб-Агентов">
+        <div class="panel-header">
+          <div class="panel-title">
+            <!-- AI Robot Brain Icon -->
+            <svg viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5z"/></svg>
+            <span id="agents-hub-title">Диспетчерский Хаб Саб-Агентов</span>
+          </div>
+
+          <span class="hud-pill" style="font-size: 10px; padding: 2px 8px; border-color: rgba(0,240,255,0.3);">
+            4 АГЕНТА В СЕТИ
+          </span>
+        </div>
+
+        <!-- Action Button: Trigger Multi-Agent Dispatch -->
+        <div class="dispatch-action-row">
+          <button class="dispatch-trigger-btn" id="btn-run-dispatch">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+            </svg>
+            <span id="btn-dispatch-label">⚡ Запустить цикл диспетчеризации (Run Multi-Agent Dispatch)</span>
+          </button>
+        </div>
+
+        <!-- 4 Active AI Agents Grid -->
+        <div class="agents-grid">
+          
+          <!-- Agent 1: APEX (Апекс) -->
+          <div class="agent-card apex" id="agent-card-apex">
+            <div class="agent-card-header">
+              <div class="agent-identity">
+                <div class="agent-avatar">🤖</div>
+                <div class="agent-name-box">
+                  <h4 id="agent-1-name">АПЕКС</h4>
+                  <span class="role" id="agent-1-role">Автономный диспетчер</span>
+                </div>
+              </div>
+              <span class="agent-status-badge active" id="apex-status">ОПТИМИЗАЦИЯ</span>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-1-lbl1">Загрузка фур:</span>
+              <strong id="apex-metric-load">96.8% Полная</strong>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-1-lbl2">Транспорт:</span>
+              <strong id="apex-metric-carrier">Деловые Линии / ПЭК</strong>
+            </div>
+          </div>
+
+          <!-- Agent 2: PATHFINDER (Следопыт) -->
+          <div class="agent-card pathfinder" id="agent-card-pathfinder">
+            <div class="agent-card-header">
+              <div class="agent-identity">
+                <div class="agent-avatar">🧭</div>
+                <div class="agent-name-box">
+                  <h4 id="agent-2-name">СЛЕДОПЫТ</h4>
+                  <span class="role" id="agent-2-role">Оптимизатор маршрутов</span>
+                </div>
+              </div>
+              <span class="agent-status-badge optimizing" id="pathfinder-status">АКТИВЕН</span>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-2-lbl1">Холостой ход:</span>
+              <strong id="pathfinder-metric-deadhead">-14.2% км</strong>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-2-lbl2">Трассы / РТО:</span>
+              <strong id="pathfinder-metric-hos">М-11/М-12 100%</strong>
+            </div>
+          </div>
+
+          <!-- Agent 3: SENTINEL (Часовой) -->
+          <div class="agent-card sentinel" id="agent-card-sentinel">
+            <div class="agent-card-header">
+              <div class="agent-identity">
+                <div class="agent-avatar">📡</div>
+                <div class="agent-name-box">
+                  <h4 id="agent-3-name">ЧАСОВОЙ</h4>
+                  <span class="role" id="agent-3-role">ГЛОНАСС / Телематика</span>
+                </div>
+              </div>
+              <span class="agent-status-badge monitoring" id="sentinel-status">МОНИТОРИНГ</span>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-3-lbl1">Телематика:</span>
+              <strong id="sentinel-metric-gps">ГЛОНАСС 32мс</strong>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-3-lbl2">Точность ETA:</span>
+              <strong id="sentinel-metric-eta">98.2% в срок</strong>
+            </div>
+          </div>
+
+          <!-- Agent 4: VERITAS (Аудитор) -->
+          <div class="agent-card veritas" id="agent-card-veritas">
+            <div class="agent-card-header">
+              <div class="agent-identity">
+                <div class="agent-avatar">⚖️</div>
+                <div class="agent-name-box">
+                  <h4 id="agent-4-name">АУДИТОР</h4>
+                  <span class="role" id="agent-4-role">Экономика / Платон</span>
+                </div>
+              </div>
+              <span class="agent-status-badge auditing" id="veritas-status">АУДИТ</span>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-4-lbl1">Ставка рейса:</span>
+              <strong id="veritas-metric-cpm">110 ₽ / км</strong>
+            </div>
+            <div class="agent-metric-line">
+              <span id="agent-4-lbl2">Маржинальность:</span>
+              <strong id="veritas-metric-margin">41.8% Чистая</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Live Streaming Agent Decision Log -->
+        <div class="log-terminal-container">
+          <div class="terminal-header">
+            <div class="terminal-title">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/>
+              </svg>
+              <span id="terminal-heading">Живой лог решений саб-агентов и телеметрии рейсов</span>
+            </div>
+            <div class="terminal-tools">
+              <button class="terminal-tool-btn" id="btn-clear-logs" title="Очистить терминал">Очистить</button>
+              <button class="terminal-tool-btn" id="btn-autoscroll-toggle" data-active="true">Автопрокрутка: ВКЛ</button>
+            </div>
+          </div>
+
+          <div class="agent-log-feed" id="agent-log-feed" role="log" aria-live="polite">
+            <!-- Dynamic Log Items Injected by app.js -->
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- =====================================================================
+         Fleet & Corridor Analytics Charts Section (3 Modern Chart Panels)
+         ===================================================================== -->
+    <section class="analytics-section" aria-label="Аналитика перевозок">
+      
+      <!-- Chart 1: Volume by Factory -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            <span id="chart-1-title">Объем отгрузок по фабрикам</span>
+          </div>
+          <span class="chart-badge" id="chart-1-badge">6 Кондитерских РЦ</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chart-factory-volume"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Distribution by Shipping Mode -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+            <span id="chart-2-title">Распределение по типам перевозок</span>
+          </div>
+          <span class="chart-badge" id="chart-2-badge">Типы автопоездов</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chart-shipping-modes"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 3: Top 10 High-Volume Corridors -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+            <span id="chart-3-title">Топ-10 грузовых коридоров</span>
+          </div>
+          <span class="chart-badge" id="chart-3-badge">Федеральные трассы</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="chart-top-corridors"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =====================================================================
+         Freight Shipments / TTN Manifest Table Section
+         ===================================================================== -->
+    <section class="table-panel" aria-label="Реестр товарно-транспортных накладных">
+      <div class="table-toolbar">
+        <div class="table-stats-info">
+          <span id="table-info-prefix">РЕЕСТР ТТН / ЭТрН: Показано <strong id="table-showing-range">1-12</strong> из <strong id="table-total-count">10 195</strong> рейсов</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <!-- Items per page selector -->
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">
+            <span id="lbl-page-size">На страницу:</span>
+            <select class="filter-select" id="table-page-size" style="padding: 4px 8px;">
+              <option value="12">12</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
+
+          <!-- Export CSV button -->
+          <button class="btn-secondary" id="btn-export-csv" title="Экспорт отфильтрованных рейсов в CSV файл">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            </svg>
+            <span id="btn-export-label">Экспорт реестра (CSV)</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="shipments-table" id="shipments-data-table">
+          <thead>
+            <tr id="table-header-row">
+              <th data-sort="order_id" id="th-order-id">Номер ТТН ↕</th>
+              <th data-sort="date" id="th-dates">Даты (Погрузка → Доставка) ↕</th>
+              <th data-sort="factory" id="th-factory">Фабрика отправления ↕</th>
+              <th data-sort="destination" id="th-destination">Пункт назначения ↕</th>
+              <th data-sort="ship_mode" id="th-mode">Класс доставки ↕</th>
+              <th data-sort="truck_type" id="th-truck">Тип автопоезда ↕</th>
+              <th data-sort="carrier" id="th-carrier">Перевозчик ↕</th>
+              <th data-sort="distance" id="th-distance">Дистанция ↕</th>
+              <th data-sort="lead_days" id="th-lead">Срок ↕</th>
+              <th data-sort="freight_cost" id="th-cost">Ставка / Стоимость ↕</th>
+              <th data-sort="status" id="th-status">Статус ↕</th>
+            </tr>
+          </thead>
+          <tbody id="shipments-table-body">
+            <!-- Injected dynamically by app.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="pagination-bar">
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);" id="page-indicator">
+          Страница 1 из 850
+        </div>
+        <div class="page-controls" id="pagination-controls">
+          <button class="page-btn" id="btn-page-first" title="Первая страница">« Первая</button>
+          <button class="page-btn" id="btn-page-prev" title="Предыдущая страница">‹ Назад</button>
+          <div id="pagination-number-buttons" style="display: flex; gap: 4px;"></div>
+          <button class="page-btn" id="btn-page-next" title="Следующая страница">Вперед ›</button>
+          <button class="page-btn" id="btn-page-last" title="Последняя страница">Последняя »</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- =====================================================================
+       Shipment Manifest Detail Modal (Электронная Транспортная Накладная - ЭТрН)
+       ===================================================================== -->
+  <div class="modal-backdrop" id="manifest-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title">ЭЛЕКТРОННАЯ ТРАНСПОРТНАЯ НАКЛАДНАЯ (ЭТрН) // № RU-2024-XXXX</div>
+        <button class="modal-close-btn" id="modal-close-btn" title="Закрыть">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-content">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Mount -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Local Vendor Libraries (100% offline & zero-latency) -->
+  <script src="leaflet.js"></script>
+  <script src="chart.min.js"></script>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+
+</body>
+</html>
