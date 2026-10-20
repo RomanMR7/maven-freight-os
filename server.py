@@ -36,37 +36,48 @@ DB_PATH_RU = os.path.join(BASE_DIR, "logistics_ru.db")
 
 
 def resolve_db_path(region: str) -> str:
-    """Return database path based on selected region ('ru' or 'us') with search fallback."""
+    """Return database path based on selected region ('ru' or 'us') with search and /tmp fallback."""
     reg = (region or "ru").strip().lower()
     target_filename = "logistics.db" if reg == "us" else "logistics_ru.db"
 
-    # Search candidates across BASE_DIR, parent dirs, CWD, and Vercel Lambda root
+    # In serverless environment, check /tmp writable directory first
+    tmp_path = os.path.join("/tmp", target_filename)
+    if os.path.exists(tmp_path):
+        return tmp_path
+
+    # Search candidates across api subfolder, BASE_DIR, parent dirs, CWD, and Vercel Lambda root
     search_dirs = [
+        os.path.join(BASE_DIR, "api"),
         BASE_DIR,
         os.path.dirname(BASE_DIR),
         os.getcwd(),
+        os.path.join(os.getcwd(), "api"),
         os.path.join(os.getcwd(), "us-candy-logistics-trucking"),
+        os.path.join(os.getcwd(), "us-candy-logistics-trucking", "api"),
         "/var/task",
-        os.path.join("/var/task", "us-candy-logistics-trucking")
+        "/var/task/api",
+        os.path.join("/var/task", "us-candy-logistics-trucking"),
+        os.path.join("/var/task", "us-candy-logistics-trucking", "api")
     ]
+    found_candidate = None
     for d in search_dirs:
         candidate = os.path.join(d, target_filename)
         if os.path.exists(candidate):
-            return candidate
+            found_candidate = candidate
+            break
+
+    if found_candidate:
+        # If in a Linux serverless container where /tmp is available, copy to /tmp for full write & WAL permissions
+        if os.path.exists("/tmp") and os.name != "nt":
+            import shutil
+            try:
+                shutil.copyfile(found_candidate, tmp_path)
+                return tmp_path
+            except Exception:
+                return found_candidate
+        return found_candidate
 
     default_path = os.path.join(BASE_DIR, target_filename)
-    if reg == "us" and not os.path.exists(default_path):
-        try:
-            import data_pipeline
-            data_pipeline.run_pipeline()
-        except Exception:
-            pass
-    elif reg == "ru" and not os.path.exists(default_path):
-        try:
-            import data_pipeline_ru
-            data_pipeline_ru.generate_russian_dataset()
-        except Exception:
-            pass
     return default_path
 
 
