@@ -1,11 +1,3 @@
 {
-  "version": 2,
-  "outputFileTracingIncludes": {
-    "api/**/*": [
-      "./logistics.db",
-      "./logistics_ru.db",
-      "./api/logistics.db",
-      "./api/logistics_ru.db"
-    ]
-  }
+  "version": 2
 }
