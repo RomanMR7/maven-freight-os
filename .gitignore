@@ -17,3 +17,5 @@ desktop.ini
 
 # Temporary artifacts
 screenshot*.png
+
+.vercel

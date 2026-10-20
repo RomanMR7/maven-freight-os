@@ -125,11 +125,26 @@ class LogisticsAPIHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
+    def do_HEAD(self):
+        """Handle HEAD requests cleanly (prevents 501 on monitoring pings)."""
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+
     def do_GET(self):
         """Route GET requests to API handlers or static files."""
         parsed = urlparse(self.path)
         path = parsed.path
         query = parse_qs(parsed.query)
+
+        # Detect original path if invoked through Vercel Serverless Function rewrites
+        matched_path = self.headers.get("x-matched-path", "") or self.headers.get("x-now-route-matches", "")
+        if matched_path and "/api/" in matched_path:
+            mp = urlparse(matched_path)
+            path = mp.path
+            if mp.query:
+                query.update(parse_qs(mp.query))
 
         try:
             if path == "/api/stats":
@@ -152,6 +167,14 @@ class LogisticsAPIHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
         query = parse_qs(parsed.query)
+
+        # Detect original path if invoked through Vercel Serverless Function rewrites
+        matched_path = self.headers.get("x-matched-path", "") or self.headers.get("x-now-route-matches", "")
+        if matched_path and "/api/" in matched_path:
+            mp = urlparse(matched_path)
+            path = mp.path
+            if mp.query:
+                query.update(parse_qs(mp.query))
 
         try:
             if path == "/api/dispatch":
